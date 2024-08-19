@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+app.use(cors());
 
 require("dotenv").config();
 
@@ -13,7 +14,5 @@ app.listen(PORT, () => {
 app.use(express.json());
 
 app.use("/api", require("./routes/routes"));
-
-app.use(cors());
 
 require("./config/database").connect();
