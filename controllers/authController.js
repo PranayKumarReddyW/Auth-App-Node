@@ -2,12 +2,12 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 exports.registerController = async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name && !email && !password) {
+  const { name, username, password } = req.body;
+  if (!name && !username && !password) {
     return res.status(400).json({ message: "Please enter all fields" });
   }
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ username });
     if (user) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -15,7 +15,7 @@ exports.registerController = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     user = new User({
       name,
-      email,
+      username,
       password: hashedPassword,
     });
     await user.save();
@@ -28,12 +28,12 @@ exports.registerController = async (req, res) => {
 const jwt = require("jsonwebtoken");
 
 exports.loginController = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email && !password) {
+  const { username, password } = req.body;
+  if (!username && !password) {
     return res.status(400).json({ message: "Please enter all fields" });
   }
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: "User does not exist" });
     }
