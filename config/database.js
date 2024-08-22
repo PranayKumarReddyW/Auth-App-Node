@@ -1,19 +1,14 @@
-const { MongoClient } = require("mongodb");
 const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
 require("dotenv").config();
 
-const connect = mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-  })
-  .then(() => {
+mongoose.set("strictQuery", false);
+
+exports.connect = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
     console.log("DB connected");
-  })
-  .catch((error) => {
-    console.log("Error: ", error);
-
-    return error;
-  });
-
-module.exports = connect;
+  } catch (error) {
+    console.error("Error connecting to DB:", error);
+    process.exit(1); // Optional: exit the process if the connection fails
+  }
+};
